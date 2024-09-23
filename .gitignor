@@ -1,0 +1,50 @@
+# Python general
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.sqlite3
+*.db
+
+# Virtual environments
+env/
+venv/
+ENV/
+ENV.bak/
+.env
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# Logs and cache
+*.log
+*.pot
+*.mo
+*.swp
+*.swo
+*.swn
+*.tmp
+.DS_Store
+
+# Static and media files
+staticfiles/
+images/
+uploads/
+
+# Alembic migrations
+alembic/versions/*.pyc
+alembic/versions/*.pyo
+
+# IDE settings, project files, and other artifacts
+*.iml
+
+# OS generated files
+Thumbs.db
+.DS_Store
+
+# Environment variables and secrets
+.env
+*.env

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peyman - Web Designer</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile">
+            <img src="/images/profile.jpg" alt="Profile Picture" class="profile-picture">
+            <h2>Dashboard</h2>
+
+            <div class="social-links">
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+            <a href="#" class="btn-download">Download CV</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/" >Home</a></li>
+                <li><a href="/about">About Me</a></li>
+                <li><a href="/portfolio">Demonstrations</a></li>
+                <li><a href="/blog" >Blog</a></li>
+                <li><a href="/contact" class="active">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="content">
+            <h1>Peyman Pz</h1>
+            <p>contact</p>
+        </div>
+    </div>
+
+
+</body>
+</html>

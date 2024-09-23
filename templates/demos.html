@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peyman - Web Designer</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile">
+            <img src="/images/profile.jpg" alt="Profile Picture" class="profile-picture">
+            <h2>Dashboard</h2>
+
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/peyman-pourazhari-2448a4238/"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/greypz"><i class="fab fa-github"></i></a>
+            </div>
+            <a href="#" class="btn-download">Download CV</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Me</a></li>
+                <li><a href="/portfolio" class="active">Demonstrations</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="content">
+            <h1>Peyman Pz</h1>
+            <p>Here are some of my projects:</p>
+
+            <div class="auth-buttons">
+                <a href="/portfolio/authorize" class="btn-signin">Login</a>
+            </div>
+
+            <div class="projects-container">
+                <!-- Project 1 -->
+                <div class="project-item">
+                    <a href="#" onclick="accessProject('/portfolio/project1')" class="project-link">
+                        <img src="/images/project1.jpg" alt="Project 1">
+                        <h3>Project 1</h3>
+                    </a>
+                </div>
+                <!-- Project 2 -->
+                <div class="project-item">
+                    <a href="#" onclick="accessProject('/portfolio/project2')" class="project-link">
+                        <img src="/images/project2.jpg" alt="Project 2">
+                        <h3>Project 2</h3>
+                    </a>
+                </div>
+                <!-- Additional projects follow the same pattern... -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for token validation and project access -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            window.location.href = '/portfolio/authorize';
+        }
+    });
+
+    async function accessProject(projectUrl) {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            try {
+                const response = await fetch(projectUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    // Redirect to project page if authorized
+                    window.location.href = projectUrl;
+                } else {
+                    console.error('Failed to access project:', response.status);
+                    alert('Unauthorized access. Please log in again.');
+                    window.location.href = '/portfolio/authorize';
+                }
+            } catch (error) {
+                console.error('Error accessing project:', error);
+            }
+        } else {
+            console.error('No access token found, please log in.');
+            window.location.href = '/portfolio/authorize';
+        }
+    }
+    </script>
+</body>
+</html>
