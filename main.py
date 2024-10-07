@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 from routers import about,blog,contact,demos
-
+import uvicorn
 app = FastAPI()
 
 # Mount the static files directory
@@ -25,6 +25,8 @@ templates = Jinja2Templates(directory="templates")
 async def read_root(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
+if __name__== "__main__":
+    uvicorn.run(app,host="0.0.0.0",port=8000)
 
 
 

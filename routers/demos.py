@@ -5,15 +5,15 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse
-from starlette.staticfiles import StaticFiles
 from starlette.status import HTTP_401_UNAUTHORIZED
 from starlette.templating import Jinja2Templates
 import os
 from schemas.userschema import UserCreate,Token
+from schemas.messageschema import MessageData
 from dependencies.auth import hash_password, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token,get_current_user
 from DataBase.get_db import get_db
 from models.user import User
-
+from models.message import Message
 statpath = os.path.join(os.path.dirname(__file__), os.pardir, "static")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/portfolio/authorize/log-in")
 router = APIRouter()
@@ -43,7 +43,7 @@ async def sign_up(user_data: UserCreate, db: Session = Depends(get_db)):
         username=user_data.username,
         email=user_data.email,
         phone=user_data.phone,
-        password=hashed_pass  # Remember to hash the password in production
+        password=hashed_pass
     )
     db.add(new_user)
     db.commit()
@@ -68,6 +68,32 @@ async def login(db:Session=Depends(get_db), form_data: OAuth2PasswordRequestForm
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/project{project_number}")
-async def projects(project_number:int,current_user:User=Depends(get_current_user)):
-    return {"the html of this project":current_user.username}
+@router.get("/project1", response_class=HTMLResponse)
+async def projects(request: Request, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    # Fetch previous messages from the database for the user
+    messages = db.query(Message).filter(Message.user_id == current_user.id, Message.project == 1).all()
+    message_list = [{"username": current_user.username, "message": msg.content} for msg in messages]
+
+    return templates.TemplateResponse(
+        "project1.html",
+        {"request": request, "username": current_user.username, "messages": message_list}
+    )
+
+@router.get("/project2", response_class=HTMLResponse)
+async def projects(request: Request, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    # Fetch previous messages from the database for the user
+    messages = db.query(Message).filter(Message.project == 2).all()
+    users=db.query(User).all()
+    message_list = [{"username": msg.user.username, "message": msg.content} for msg in messages]
+
+    return templates.TemplateResponse(
+        "project2.html",
+        {"request": request, "username": current_user.username, "messages": message_list}
+    )
+@router.post("/project1/send-message",response_class=JSONResponse)
+async def save_message(payload:MessageData,db:Session=Depends(get_db)):
+    user=db.query(User).filter(User.username==payload.username).first()
+    message = Message(content=payload.message, user_id=user.id,project=int(payload.project))
+    db.add(message)
+    db.commit()
+    return JSONResponse( {"message":"is submiting"},status_code=200)

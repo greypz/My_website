@@ -9,6 +9,8 @@ class Message(Base):
     content = Column(String)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship("User", back_populates="messages")
+    project = Column(Integer, default=1)  # New column for project identifier
 
     def __repr__(self):
-        return f"<Message(content={self.content}, user_id={self.user_id})>"
+        return f"<Message(content={self.content}, user_id={self.user_id}, project={self.project})>"
+
